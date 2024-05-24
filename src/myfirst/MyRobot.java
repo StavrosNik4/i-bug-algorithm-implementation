@@ -1,4 +1,4 @@
-// MyRobot.java
+// myfirst_extended.MyRobot.java
 package myfirst;
 import javax.vecmath.Vector3d;
 import simbad.sim.Agent;

@@ -1,3 +1,5 @@
+package ibug;
+
 import simbad.sim.*;
 
 import javax.vecmath.Point3d;

@@ -1,4 +1,4 @@
-// Env.java
+package myfirst_extended;// Env.java
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
@@ -10,7 +10,7 @@ public class MyEnv extends EnvironmentDescription {
         light1SetPosition(-8, 4, 5);
         light1IsOn = true;
         light2SetPosition(8, 4, -5);
-        light2IsOn = false;
+        light2IsOn = false; // Never open it
         setWorldSize(10);
         showAxis(true);
         Wall w1 = new Wall(new Vector3d(3, 0, 0), 19, 1, this);
