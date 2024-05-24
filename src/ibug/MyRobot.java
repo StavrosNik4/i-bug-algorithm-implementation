@@ -10,11 +10,13 @@ public class MyRobot extends Agent {
 
     Point3d start=new Point3d();
 
-    LightSensor lightSensor;
+    LightSensor centerLightSensor, leftLightSensor, rightLightSensor;
 
     public MyRobot (Vector3d position, String name) {
         super(position,name);
-        lightSensor = RobotFactory.addLightSensor(this);
+        centerLightSensor = RobotFactory.addLightSensor(this);
+        leftLightSensor = RobotFactory.addLightSensorLeft(this);
+        rightLightSensor = RobotFactory.addLightSensorRight(this);
     }
 
     public void initBehavior() {
@@ -22,6 +24,6 @@ public class MyRobot extends Agent {
     }
 
     public void performBehavior() {
-        System.out.println("Average luminance is: " + lightSensor.getAverageLuminance());
+        System.out.println("Average luminance is: " + centerLightSensor.getAverageLuminance());
     }
 }
