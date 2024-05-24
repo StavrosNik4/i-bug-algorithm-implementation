@@ -1,7 +1,6 @@
 // Env.java
 package ibug;
 
-import myfirst.MyRobot;
 import simbad.sim.CherryAgent;
 import simbad.sim.EnvironmentDescription;
 
