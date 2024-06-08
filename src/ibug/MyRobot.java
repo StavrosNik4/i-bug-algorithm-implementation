@@ -86,7 +86,7 @@ public class MyRobot extends Agent {
                     iH = centerIntensity;
                 }
 
-                setTranslationalVelocity(1.0 / (centerIntensity + 0.2));
+                setTranslationalVelocity(1.0 / (centerIntensity * 0.5));
                 if (!collisionDetected()) {
                     behavior = RobotBehavior.UORI; // step 5 go to step 1
                 }
