@@ -86,7 +86,7 @@ public class MyRobot extends Agent {
                     iH = centerIntensity;
                 }
 
-                setTranslationalVelocity(2);
+                setTranslationalVelocity(1.0 / (centerIntensity + 0.2));
                 if (!collisionDetected()) {
                     behavior = RobotBehavior.UORI; // step 5 go to step 1
                 }
@@ -136,7 +136,6 @@ public class MyRobot extends Agent {
 
         for (int i = 0; i < sonars.getNumSensors(); i++) {
             if (sonars.getMeasurement(i) < SAFETY) {
-                System.out.println("here2");
                 return true;
             }
         }
@@ -187,9 +186,6 @@ public class MyRobot extends Agent {
 
         setRotationalVelocity(K1*phRef);
         setTranslationalVelocity(K2*Math.cos(phRef));
-
-
-
 
     }
 
