@@ -8,8 +8,7 @@ import javax.vecmath.Vector3d;
 
 public class MyRobot extends Agent {
 
-
-    // parameters by vrakas
+    // parameters for circum navigate
     double K1 = 2;
     double K2 = 1;
     double K3 = 1;
@@ -101,7 +100,6 @@ public class MyRobot extends Agent {
                 setTranslationalVelocity(0);
 
                 if (Math.abs(rightIntensity - leftIntensity) > 0.001) {
-//                    setRotationalVelocity(Math.signum(leftIntensity - rightIntensity) / 2);
                     System.out.println(100 * (leftIntensity - rightIntensity));
                     setRotationalVelocity(100 * (leftIntensity - rightIntensity));
                 }
@@ -115,7 +113,7 @@ public class MyRobot extends Agent {
                 break;
 
             case UFOL:
-                circumNavigate(false, centerIntensity); // step 6
+                circumNavigate(false); // step 6
 
                 // leave obstacle (local max)
                 if (centerIntensity > iH && i_k[1] > i_k[2] && i_k[1] > i_k[0]) { // step 7      // extra: centerIntensity > iL
@@ -130,18 +128,8 @@ public class MyRobot extends Agent {
     @Override
     public boolean collisionDetected() {
 
-        int[] listOfIndex = {0, 1, 2, 6, 7};
-
-
-//        for (int i = 0; i < sonars.getNumSensors(); i++) {
-//            if (sonars.getMeasurement(i) < SAFETY) {
-//                return true;
-//            }
-//        }
-//        return false;
-
-        for (int i = 0; i < 5; i++){
-            if (sonars.getMeasurement(listOfIndex[i]) < SAFETY) {
+        for (int i = 0; i < sonars.getNumSensors(); i++) {
+            if (sonars.getMeasurement(i) < SAFETY) {
                 return true;
             }
         }
@@ -171,7 +159,7 @@ public class MyRobot extends Agent {
     }
 
 
-    public void circumNavigate(boolean CLOCKWISE, double centerIntensity){
+    public void circumNavigate(boolean CLOCKWISE){
         int min;
         min=0;
         for (int i=1;i<sonars.getNumSensors();i++)

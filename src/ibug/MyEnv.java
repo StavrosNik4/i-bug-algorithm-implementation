@@ -20,7 +20,7 @@ public class MyEnv extends EnvironmentDescription {
 
         // obstacles
 //        spiral(this);
-        spheres(this);
+//        spheres(this);
 //        box(this);
 //        bottle(this);
 
