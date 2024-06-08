@@ -23,9 +23,7 @@ public class MyRobot extends Agent {
     double iL = 0;
     double iH = 0;
 
-    double i_k = 0;
-    double i_k1 = 0;
-    double i_k2 = 0;
+    double[] i_k = {0.0, 0.0, 0.0};
 
     public enum RobotBehavior {
         UFWD,
@@ -64,11 +62,9 @@ public class MyRobot extends Agent {
             return;
         }
 
-        i_k2 = i_k1;
-        i_k1 = i_k;
-        i_k = centerIntensity;
-
-
+        i_k[2] = i_k[1];
+        i_k[1] = i_k[0];
+        i_k[0] = centerIntensity;
 
         // Stop the robot
         if (centerIntensity > goalIntensity){   // step 3
@@ -122,7 +118,7 @@ public class MyRobot extends Agent {
                 circumNavigate(false, centerIntensity); // step 6
 
                 // leave obstacle (local max)
-                if (centerIntensity > iH && i_k1 > i_k2 && i_k1 > i_k) { // step 7      // extra: centerIntensity > iL
+                if (centerIntensity > iH && i_k[1] > i_k[2] && i_k[1] > i_k[0]) { // step 7      // extra: centerIntensity > iL
                     behavior = RobotBehavior.UORI; // go to step 1
                 }
 
@@ -134,8 +130,18 @@ public class MyRobot extends Agent {
     @Override
     public boolean collisionDetected() {
 
-        for (int i = 0; i < sonars.getNumSensors(); i++) {
-            if (sonars.getMeasurement(i) < SAFETY) {
+        int[] listOfIndex = {0, 1, 2, 6, 7};
+
+
+//        for (int i = 0; i < sonars.getNumSensors(); i++) {
+//            if (sonars.getMeasurement(i) < SAFETY) {
+//                return true;
+//            }
+//        }
+//        return false;
+
+        for (int i = 0; i < 5; i++){
+            if (sonars.getMeasurement(listOfIndex[i]) < SAFETY) {
                 return true;
             }
         }
