@@ -1,8 +1,6 @@
 package ibug;
 
-import simbad.sim.CherryAgent;
 import simbad.sim.EnvironmentDescription;
-import simbad.sim.Wall;
 
 import simbad.sim.*;
 import javax.vecmath.Color3f;
@@ -12,7 +10,6 @@ import javax.vecmath.Vector3f;
 public class MyEnv extends EnvironmentDescription {
     MyEnv(){
         // lights
-        light1SetPosition(5, 2, -4); // second parameter is height
         light1IsOn = true;
         light2IsOn = false;
         this.ambientLightColor = new Color3f(0,0,0);
@@ -22,60 +19,56 @@ public class MyEnv extends EnvironmentDescription {
         archColor = red; boxColor = darkgray; wallColor = blue;
 
         // obstacles
-
-//        addBoxObstacle(this);
-//
-//        addWallObstacle(this);
-//
-//        addPyramidObstacle(this);
-
-//        addMaze(this);
-
-        addCustomStructure(this);
-
-        // robot
-        add(new MyRobot(new Vector3d(-8, 0, 0), "robot 1"));
-
+//        spiral(this);
+        spheres(this);
+//        box(this);
+//        bottle(this);
 
     }
 
+    void spiral(EnvironmentDescription environment){
+        environment.add(new Box(new Vector3d(0,0,7), new Vector3f(14,1,1),environment));
+        environment.add(new Box(new Vector3d(-2,0,3), new Vector3f(12,1,1),environment));
+        environment.add(new Box(new Vector3d(0,0,-9), new Vector3f(16,1,1),environment));
+        environment.add(new Box(new Vector3d(-7.5,0,-2.5), new Vector3f(1,1,12),environment));
+        environment.add(new Box(new Vector3d(7.5,0,-0.5), new Vector3f(1,1,16),environment));
+        environment.add(new Box(new Vector3d(3.5,0,-1), new Vector3f(1,1,7),environment));
+        environment.add(new Box(new Vector3d(0,0,-5), new Vector3f(7,1,1),environment));
+        environment.add(new Box(new Vector3d(-3.5,0,-2.5), new Vector3f(1,1,4),environment));
+        environment.add(new Box(new Vector3d(-1.5,0,-1), new Vector3f(3,1,1),environment));
 
-//    // Bottle Object
-//    static void bottle(EnvironmentDescription environment){
-//        environment.add(new Box(new Vector3d(0,0,3), new Vector3f(5,1,5),environment));
-//        environment.add(new Box(new Vector3d(0,0,-0.5), new Vector3f(2,1,2),environment));
-//    }
+        environment.light1SetPosition(2, 2, -4); // second parameter is height
+        environment.add(new MyRobot(new Vector3d(-8, 0, 5), "robot 1"));
 
-    // Adds a big box obstacle
-    static void addBoxObstacle(EnvironmentDescription environment){
-        // Add a single box at the center
-        environment.add(new Box(new Vector3d(0, 0, 0), new Vector3f(4, 1, 4), environment));
     }
 
-    // Adds a wall obstacle
-    static void addWallObstacle(EnvironmentDescription environment){
-        Wall w1 = new Wall(new Vector3d(-5, 0, 0), 10, 1, environment);
-        w1.rotate90(1);
-        environment.add(w1);
+    void spheres(EnvironmentDescription environment){
+        environment.add(new Box(new Vector3d(0,0,3), new Vector3f(5,1,5),environment));
+        environment.add(new Box(new Vector3d(2.75,0,3), new Vector3f(0.5f,1,4),environment));
+        environment.add(new Box(new Vector3d(3.25,0,3), new Vector3f(0.5f,1,3),environment));
+        environment.add(new Box(new Vector3d(-2.75,0,3), new Vector3f(0.5f,1,4),environment));
+        environment.add(new Box(new Vector3d(-3.25,0,3), new Vector3f(0.5f,1,3),environment));
+
+        environment.add(new Box(new Vector3d(0,0,-4), new Vector3f(2,1,2),environment));
+
+        environment.light1SetPosition(0, 2, 8); // second parameter is height
+        environment.add(new MyRobot(new Vector3d(0, 0, -8), "robot 1"));
+
     }
 
-    // Adds a custom structure using walls
-    static void addCustomStructure(EnvironmentDescription environment){
+    static void box(EnvironmentDescription environment){
+        environment.add(new Box(new Vector3d(0,0,0), new Vector3f(5,1,5),environment));
 
-        // Add the vertical wall
-        Wall verticalWall = new Wall(new Vector3d(-3, 0, 0), 10, 1, environment);
-        verticalWall.rotate90(1);
-        environment.add(verticalWall);
+        environment.light1SetPosition(0, 2, -6); // second parameter is height
+        environment.add(new MyRobot(new Vector3d(0, 0, 8), "robot 1"));
 
-        // Add the horizontal wall
-        Wall horizontalWall = new Wall(new Vector3d(-1, 0, -5), 5, 1, environment);
-        environment.add(horizontalWall);
+    }
+    static void bottle(EnvironmentDescription environment){
+        environment.add(new Box(new Vector3d(0,0,3), new Vector3f(5,1,5),environment));
+        environment.add(new Box(new Vector3d(0,0,-0.5), new Vector3f(2,1,2),environment));
 
-//        // Add the box
-//        Box box = new Box(new Vector3d(2, 0, 0), new Vector3f(3, 1, 3), environment);
-//        environment.add(box);
-
-
+        environment.light1SetPosition(0, 2, -6); // second parameter is height
+        environment.add(new MyRobot(new Vector3d(0, 0, 8), "robot 1"));
     }
 
 
