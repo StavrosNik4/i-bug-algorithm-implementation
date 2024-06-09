@@ -2,7 +2,6 @@ package niobe_ibug;
 
 import simbad.sim.*;
 import java.lang.Math;
-
 import javax.vecmath.Vector3d;
 
 public class MyRobot extends Agent {
@@ -17,7 +16,7 @@ public class MyRobot extends Agent {
     private static final double THRESHOLD = 0.079302;
 
     private static final double SAFETY = 1.0 + 0.3; // robot radius = 0.3
-    private static final double CONSTANT = 10000.0; //10000.0500.0
+    private static final double CONSTANT = 10000.0; //500.0
     private static final double ERROR = 0.00001;
 
     // Constructor
@@ -70,7 +69,6 @@ public class MyRobot extends Agent {
             setTranslationalVelocity(sx);
             setRotationalVelocity(sy);
         }
-
     }
 
     //
@@ -176,8 +174,5 @@ public class MyRobot extends Agent {
 //        System.out.println("l = " + l);
 //        System.out.println("r = " + r);
 //        System.out.println("c = " + c);
-
-
-
     }
 }

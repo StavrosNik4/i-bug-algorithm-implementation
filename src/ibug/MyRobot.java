@@ -5,7 +5,6 @@ import simbad.sim.*;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-
 public class MyRobot extends Agent {
 
     // parameters for circum navigate
@@ -34,6 +33,7 @@ public class MyRobot extends Agent {
 
     public RobotBehavior behavior;
 
+    // Constructor
     public MyRobot (Vector3d position, String name) {
         super(position,name);
 
@@ -43,11 +43,12 @@ public class MyRobot extends Agent {
         sonars = RobotFactory.addSonarBeltSensor(this,8);
     }
 
+    // Robot's initial behavior - runs only once, in the beginning
     public void initBehavior() {
         behavior = RobotBehavior.UORI;
     }
 
-    // Function to choose which behavior to perform per step
+    // Function to choose which behavior the robot will perform at each step
     public void performBehavior() {
         System.out.println("Average Center luminance is: " + Math.pow(centerLightSensor.getLux(), 0.1));
         System.out.println("Average Left luminance is: " + Math.pow(leftLightSensor.getLux(), 0.1));
@@ -94,12 +95,11 @@ public class MyRobot extends Agent {
                     setTranslationalVelocity(0);
                     behavior = RobotBehavior.UFOL; // step 6 of i-bug algorithm
                 }
-
                 break;
+
             case UORI:
 
                 iL = centerIntensity;   // step 1 of i-bug algorithm
-
 
                 // step 2 of i-bug algorithm
                 setTranslationalVelocity(0);
@@ -115,6 +115,7 @@ public class MyRobot extends Agent {
                     setRotationalVelocity(0);
                     behavior = RobotBehavior.UFWD;
                 }
+
                 break;
 
             case UFOL:
@@ -124,14 +125,12 @@ public class MyRobot extends Agent {
                 if (centerIntensity > iH && i_k[1] > i_k[2] && i_k[1] > i_k[0]) { // step 7 of i-bug algorithm      // extra: centerIntensity > iL
                     behavior = RobotBehavior.UORI; // (go to step 1)
                 }
-
                 break;
         }
-
     }
 
-    // Function that gets the measurements of the distance from an obstacle for each sonar and if it is lower than a
-    // safety threshold, it returns true
+    // Function that gets the measurements of the distance from an obstacle for each sonar, and if any measurement
+    // is lower than a safety threshold, it returns 'true'
     @Override
     public boolean collisionDetected() {
 
@@ -140,8 +139,8 @@ public class MyRobot extends Agent {
                 return true;
             }
         }
-        return false;
 
+        return false;
     }
 
 
@@ -156,39 +155,44 @@ public class MyRobot extends Agent {
 
     public Point3d getSensedPoint(int sonar) {
         double v;
+
         if (sonars.hasHit(sonar))
             v = getRadius() + sonars.getMeasurement(sonar);
         else
             v = getRadius() + sonars.getMaxRange();
+
         double x = v * Math.cos(sonars.getSensorAngle(sonar));
         double z = v * Math.sin(sonars.getSensorAngle(sonar));
+
         return new Point3d(x, 0, z);
     }
 
 
     public void circumNavigate(boolean CLOCKWISE){
         int min;
-        min=0;
-        for (int i=1;i<sonars.getNumSensors();i++)
-            if (sonars.getMeasurement(i)<sonars.getMeasurement(min))
-                min=i;
+        min = 0;
+
+        for (int i = 1; i < sonars.getNumSensors(); i++)
+            if (sonars.getMeasurement(i) < sonars.getMeasurement(min))
+                min = i;
+
         Point3d p = getSensedPoint(min);
         double d = p.distance(new Point3d(0,0,0));
         Vector3d v;
+
         if (CLOCKWISE)
             v = new Vector3d(-p.z,0,p.x);
         else
             v = new Vector3d(p.z,0,-p.x);
+
         double phLin = Math.atan2(v.z,v.x);
         double phRot = Math.atan(K3*(d-SAFETY));
+
         if (CLOCKWISE)
             phRot=-phRot;
         double phRef = wrapToPi(phLin+phRot);
 
         setRotationalVelocity(K1*phRef);
         setTranslationalVelocity(K2*Math.cos(phRef));
-
     }
-
-
 }
