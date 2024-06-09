@@ -19,9 +19,9 @@ public class MyEnv extends EnvironmentDescription {
         archColor = red; boxColor = darkgray; wallColor = blue;
 
         // obstacles
-//        spiral(this);
+        box(this);
 //        spheres(this);
-//        box(this);
+//        spiral(this);
 //        bottle(this);
 
     }

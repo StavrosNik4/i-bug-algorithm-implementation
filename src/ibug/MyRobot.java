@@ -17,11 +17,13 @@ public class MyRobot extends Agent {
     LightSensor centerLightSensor, leftLightSensor, rightLightSensor;
     RangeSensorBelt sonars;
 
+    // intensity threshold for the robot to be in a distance less than 0.6m away from the projection of the light
     double goalIntensity = 0.79;
 
     double iL = 0;
     double iH = 0;
 
+    // array to store the 3 most recent intensity measurements
     double[] i_k = {0.0, 0.0, 0.0};
 
     public enum RobotBehavior {
@@ -45,27 +47,30 @@ public class MyRobot extends Agent {
         behavior = RobotBehavior.UORI;
     }
 
+    // Function to choose which behavior to perform per step
     public void performBehavior() {
         System.out.println("Average Center luminance is: " + Math.pow(centerLightSensor.getLux(), 0.1));
         System.out.println("Average Left luminance is: " + Math.pow(leftLightSensor.getLux(), 0.1));
         System.out.println("Average Right luminance is: " + Math.pow(rightLightSensor.getLux(), 0.1));
 
+        // get each light sensor's intensity
         double leftIntensity = Math.pow(leftLightSensor.getLux(), 0.1);
         double rightIntensity = Math.pow(rightLightSensor.getLux(), 0.1);
         double centerIntensity = Math.pow(centerLightSensor.getLux(), 0.1);
 
 
-        // Skip 0 values
+        // Skip 0 values (this was originally for getAverageLuminance, no longer needed)
         if (centerIntensity == 0) {
             behavior = RobotBehavior.UORI;
             return;
         }
 
+        // shift the previous 3 intensity measurements
         i_k[2] = i_k[1];
         i_k[1] = i_k[0];
         i_k[0] = centerIntensity;
 
-        // Stop the robot
+        // Stop the robot if it reached the max intensity
         if (centerIntensity > goalIntensity){   // step 3
             setTranslationalVelocity(0);
             setRotationalVelocity(0);
@@ -77,26 +82,26 @@ public class MyRobot extends Agent {
         switch (behavior) {
             case UFWD:
 
-                if (iL != centerIntensity) { // step 4
+                if (iL != centerIntensity) { // step 4 of i-bug algorithm
                     iH = centerIntensity;
                 }
 
                 setTranslationalVelocity(1.0 / (centerIntensity * 0.5));
                 if (!collisionDetected()) {
-                    behavior = RobotBehavior.UORI; // step 5 go to step 1
+                    behavior = RobotBehavior.UORI; // step 5 of i-bug algorithm (go to step 1)
                 }
                 else {
                     setTranslationalVelocity(0);
-                    behavior = RobotBehavior.UFOL; // step 6
+                    behavior = RobotBehavior.UFOL; // step 6 of i-bug algorithm
                 }
 
                 break;
             case UORI:
 
-                iL = centerIntensity;   // step 1
+                iL = centerIntensity;   // step 1 of i-bug algorithm
 
 
-                // step 2
+                // step 2 of i-bug algorithm
                 setTranslationalVelocity(0);
 
                 if (Math.abs(rightIntensity - leftIntensity) > 0.001) {
@@ -113,11 +118,11 @@ public class MyRobot extends Agent {
                 break;
 
             case UFOL:
-                circumNavigate(false); // step 6
+                circumNavigate(false); // step 6 of i-bug algorithm
 
                 // leave obstacle (local max)
-                if (centerIntensity > iH && i_k[1] > i_k[2] && i_k[1] > i_k[0]) { // step 7      // extra: centerIntensity > iL
-                    behavior = RobotBehavior.UORI; // go to step 1
+                if (centerIntensity > iH && i_k[1] > i_k[2] && i_k[1] > i_k[0]) { // step 7 of i-bug algorithm      // extra: centerIntensity > iL
+                    behavior = RobotBehavior.UORI; // (go to step 1)
                 }
 
                 break;
@@ -125,6 +130,8 @@ public class MyRobot extends Agent {
 
     }
 
+    // Function that gets the measurements of the distance from an obstacle for each sonar and if it is lower than a
+    // safety threshold, it returns true
     @Override
     public boolean collisionDetected() {
 
